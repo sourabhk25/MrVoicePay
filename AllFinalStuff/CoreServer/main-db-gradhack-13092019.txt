@@ -1,0 +1,70 @@
+create database voicepay;
+
+use voicepay;
+
+create table user(
+    userid bigint AUTO_INCREMENT,
+    username varchar(20) unique not null,
+    firstname varchar(50) not null,
+    lastname varchar(50) not null,
+    mobile varchar(15) not null,
+    address varchar(100) not null,
+    PRIMARY KEY(userid)
+);
+
+ALTER TABLE user AUTO_INCREMENT = 5629290;
+
+insert into user(firstname,lastname,mobile,address,username) values ('Sourabh','Kulkarni','+919432213225','Pune, India','sourabh');
+insert into user(firstname,lastname,mobile,address,username) values ('Dhruv','Thakare','+919427838194','Pune, India','dhruv');
+
+create table account(
+    userid bigint,
+    ifsc varchar(20) not null,
+    balance double,
+    openning timestamp default current_timestamp(),
+    primary key(userid),
+    foreign key(userid) references user(userid)
+);
+
+insert into account(userid,ifsc,balance) values (5629290,'IF0123',1200);
+insert into account(userid,ifsc,balance) values (5629291,'IF0123',12230);
+
+create table transaction(
+    transactionId bigint AUTO_INCREMENT,
+    fromUid bigint not null,
+    toUid bigint not null,
+    amount double not null,
+    ts timestamp default current_timestamp(),
+    primary key(transactionId),
+    foreign key (fromUid) references account(userid),
+    foreign key (toUid) references account(userid)
+);
+
+alter table transaction AUTO_INCREMENT = 125689;
+
+insert into transaction(fromUid,toUid,amount) values (5629291,5629290,500);
+insert into transaction(fromUid,toUid,amount) values (5629290,5629291,600);
+insert into transaction(fromUid,toUid,amount) values (5629291,5629290,4500);
+insert into transaction(fromUid,toUid,amount) values (5629290,5629291,700);
+insert into transaction(fromUid,toUid,amount) values (5629291,5629290,1200);
+
+create table quicklogin(
+    userid bigint not null,
+    passcode int not null,
+    primary key(userid),
+    foreign key (userid) references account(userid)
+);
+
+insert into quicklogin values (5629290,562389);
+insert into quicklogin values (5629291,564578);
+
+create table sentences(
+    userid bigint,
+    question varchar(500) not null,
+    answer varchar(500) not null,
+    foreign key (userid) references user(userid)
+);
+
+insert into sentences values(5629290,"Please wait outside","of the house");
+insert into sentences values(5629290,"How was","the math test");
+insert into sentences values(5629290,"Let me help you","with your baggage");
